@@ -1,43 +1,721 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoBus - Bus Ticket Booking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.95);
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: #667eea;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .badge {
+            background: #667eea20;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid #667eea;
+            padding-left: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .btn {
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+        }
+
+        .btn-outline {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .buses-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .bus-item {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .bus-item:hover {
+            transform: translateX(5px);
+            background: #e9ecef;
+        }
+
+        .bus-item.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f4ff, #fff);
+        }
+
+        .bus-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .bus-details {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #666;
+            margin: 0.5rem 0;
+        }
+
+        .bus-price {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 1rem 0;
+        }
+
+        .seat {
+            padding: 12px;
+            text-align: center;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 2px solid #e0e0e0;
+            background: white;
+        }
+
+        .seat.available:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .seat.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .seat.booked {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1rem 0;
+            font-size: 0.8rem;
+        }
+
+        .legend span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .total {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .ticket-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .ticket-card {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+
+        @media (max-width: 968px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-bus"></i>
+                <h1>GoBus Express</h1>
+                <span class="badge"><i class="fas fa-database"></i> JSON Storage | Frontend Only</span>
+            </div>
+            <p style="color: white; margin-top: 1rem;"><i class="fas fa-check-circle"></i> Persistent localStorage | Real-time seat management</p>
+        </div>
+
+        <div class="main-grid">
+            <!-- Left Panel -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-ticket-alt"></i>
+                    <span>Book Your Trip</span>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-city"></i> From</label>
+                    <input type="text" id="fromCity" placeholder="Departure city" value="New York">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-location-dot"></i> To</label>
+                    <input type="text" id="toCity" placeholder="Destination city" value="Boston">
+                </div>
+                
+                <div class="row-2">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Travel Date</label>
+                        <input type="date" id="travelDate">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-users"></i> Passengers</label>
+                        <input type="number" id="passengers" min="1" max="6" value="1">
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" id="searchBtn">
+                    <i class="fas fa-search"></i> Search Buses
+                </button>
+
+                <hr style="margin: 1.5rem 0;">
+
+                <div class="card-title" style="margin-bottom: 1rem;">
+                    <i class="fas fa-bus"></i>
+                    <span>Available Buses</span>
+                </div>
+                <div id="busesList" class="buses-list">
+                    <div class="loading">🔍 Search for buses...</div>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div>
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-chair"></i>
+                        <span>Seat Selection</span>
+                    </div>
+                    <div id="selectedBusInfo" style="background: #f8f9fa; padding: 1rem; border-radius: 16px; margin-bottom: 1rem;">
+                        <i class="fas fa-info-circle"></i> Select a bus from the left panel
+                    </div>
+                    <div id="seatMapArea" style="display: none;">
+                        <div id="seatGrid" class="seat-grid"></div>
+                        <div class="legend">
+                            <span style="background: white; border: 2px solid #e0e0e0;"></span> Available
+                            <span style="background: linear-gradient(135deg, #667eea, #764ba2);"></span> Selected
+                            <span style="background: #ccc;"></span> Booked
+                        </div>
+                        <div class="row-2">
+                            <button id="confirmBtn" class="btn btn-primary">Confirm Booking</button>
+                            <button id="resetBtn" class="btn btn-outline">Reset Seats</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-title">
+                        <i class="fas fa-receipt"></i>
+                        <span>Booking Summary</span>
+                    </div>
+                    <div id="summary">
+                        <div class="loading">No bus selected</div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-title">
+                        <i class="fas fa-history"></i>
+                        <span>My Tickets</span>
+                        <button id="refreshTicketsBtn" class="btn btn-outline" style="margin-left: auto; padding: 0.3rem 1rem; font-size: 0.8rem;">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div id="ticketsList" class="ticket-list">
+                        <div class="loading">No bookings yet</div>
+                    </div>
+                    <div class="row-2" style="margin-top: 1rem;">
+                        <button id="exportBtn" class="btn btn-outline"><i class="fas fa-download"></i> Export JSON</button>
+                        <button id="resetSystemBtn" class="btn btn-outline" style="border-color: #dc3545; color: #dc3545;">
+                            <i class="fas fa-trash"></i> Reset System
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Bus Database
+        const busDatabase = [
+            { id: "BUS101", name: "Silver Arrow", from: "New York", to: "Boston", departure: "08:30 AM", arrival: "01:15 PM", price: 45, seats: generateFreshSeats() },
+            { id: "BUS102", name: "GreenLine Express", from: "New York", to: "Boston", departure: "11:00 AM", arrival: "03:45 PM", price: 39, seats: generateFreshSeats() },
+            { id: "BUS103", name: "Coast Cruiser", from: "New York", to: "Washington", departure: "07:15 AM", arrival: "12:30 PM", price: 55, seats: generateFreshSeats() },
+            { id: "BUS104", name: "Metro Ride", from: "Boston", to: "New York", departure: "09:45 AM", arrival: "02:20 PM", price: 48, seats: generateFreshSeats() },
+            { id: "BUS105", name: "Sunset Travels", from: "Boston", to: "Washington", departure: "02:00 PM", arrival: "07:10 PM", price: 62, seats: generateFreshSeats() },
+            { id: "BUS106", name: "NightOwl", from: "New York", to: "Boston", departure: "10:30 PM", arrival: "02:50 AM", price: 35, seats: generateFreshSeats() }
+        ];
+
+        function generateFreshSeats() {
+            let seats = [];
+            for (let i = 1; i <= 16; i++) {
+                seats.push({ seatNo: i, status: "available" });
+            }
+            return seats;
+        }
+
+        let bookings = [];
+        let currentBus = null;
+        let selectedSeats = [];
+
+        // Load data from localStorage
+        function loadData() {
+            const savedBuses = localStorage.getItem('gobus_buses');
+            if (savedBuses) {
+                const parsed = JSON.parse(savedBuses);
+                for (let i = 0; i < busDatabase.length; i++) {
+                    if (parsed[i]) busDatabase[i].seats = parsed[i].seats;
+                }
+            }
+            
+            const savedBookings = localStorage.getItem('gobus_bookings');
+            if (savedBookings) {
+                bookings = JSON.parse(savedBookings);
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('gobus_buses', JSON.stringify(busDatabase.map(b => ({ id: b.id, seats: b.seats }))));
+            localStorage.setItem('gobus_bookings', JSON.stringify(bookings));
+        }
+
+        function getTomorrowDate() {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            return tomorrow.toISOString().split('T')[0];
+        }
+
+        document.getElementById('travelDate').value = getTomorrowDate();
+
+        function searchBuses() {
+            const from = document.getElementById('fromCity').value;
+            const to = document.getElementById('toCity').value;
+            
+            const filtered = busDatabase.filter(bus => 
+                bus.from.toLowerCase() === from.toLowerCase() && 
+                bus.to.toLowerCase() === to.toLowerCase()
+            );
+            
+            const busesList = document.getElementById('busesList');
+            
+            if (filtered.length === 0) {
+                busesList.innerHTML = '<div class="loading">🚫 No buses found for this route</div>';
+                return;
+            }
+            
+            busesList.innerHTML = filtered.map(bus => {
+                const availableSeats = bus.seats.filter(s => s.status === 'available').length;
+                return `
+                    <div class="bus-item" onclick="selectBus('${bus.id}')" data-bus-id="${bus.id}">
+                        <div class="bus-name">
+                            <i class="fas fa-bus"></i> ${bus.name} (${bus.id})
+                        </div>
+                        <div class="bus-details">
+                            <span><i class="far fa-clock"></i> ${bus.departure} → ${bus.arrival}</span>
+                            <span><i class="fas fa-chair"></i> ${availableSeats} seats left</span>
+                        </div>
+                        <div class="bus-price">$${bus.price} <span style="font-size: 0.8rem;">per seat</span></div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectBus(busId) {
+            currentBus = busDatabase.find(b => b.id === busId);
+            selectedSeats = [];
+            
+            document.getElementById('selectedBusInfo').innerHTML = `
+                <i class="fas fa-check-circle" style="color: #667eea;"></i>
+                <strong>${currentBus.name}</strong> | ${currentBus.from} → ${currentBus.to} | ${currentBus.departure} | $${currentBus.price}/seat
+            `;
+            
+            document.getElementById('seatMapArea').style.display = 'block';
+            renderSeatMap();
+            updateSummary();
+            
+            document.querySelectorAll('.bus-item').forEach(el => {
+                el.classList.remove('selected');
+                if (el.dataset.busId === busId) {
+                    el.classList.add('selected');
+                }
+            });
+        }
+
+        function renderSeatMap() {
+            if (!currentBus) return;
+            
+            const seatGrid = document.getElementById('seatGrid');
+            seatGrid.innerHTML = currentBus.seats.map(seat => {
+                let seatClass = 'seat';
+                let isSelected = selectedSeats.includes(seat.seatNo);
+                
+                if (seat.status === 'booked') {
+                    seatClass += ' booked';
+                } else if (isSelected) {
+                    seatClass += ' selected';
+                } else {
+                    seatClass += ' available';
+                }
+                
+                return `<div class="${seatClass}" onclick="toggleSeat(${seat.seatNo})">${seat.seatNo}</div>`;
+            }).join('');
+        }
+
+        function toggleSeat(seatNo) {
+            if (!currentBus) return;
+            
+            const seat = currentBus.seats.find(s => s.seatNo === seatNo);
+            if (seat.status === 'booked') {
+                alert('This seat is already booked!');
+                return;
+            }
+            
+            const passengerLimit = parseInt(document.getElementById('passengers').value);
+            const index = selectedSeats.indexOf(seatNo);
+            
+            if (index > -1) {
+                selectedSeats.splice(index, 1);
+            } else {
+                if (selectedSeats.length >= passengerLimit) {
+                    alert(`You can only select up to ${passengerLimit} seat(s)`);
+                    return;
+                }
+                selectedSeats.push(seatNo);
+            }
+            
+            renderSeatMap();
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const summaryDiv = document.getElementById('summary');
+            
+            if (!currentBus) {
+                summaryDiv.innerHTML = '<div class="loading">No bus selected</div>';
+                return;
+            }
+            
+            const total = selectedSeats.length * currentBus.price;
+            summaryDiv.innerHTML = `
+                <div class="summary-item"><span>🚌 Bus:</span><span><strong>${currentBus.name}</strong></span></div>
+                <div class="summary-item"><span>📍 Route:</span><span>${currentBus.from} → ${currentBus.to}</span></div>
+                <div class="summary-item"><span>📅 Date:</span><span>${document.getElementById('travelDate').value}</span></div>
+                <div class="summary-item"><span>💺 Selected Seats:</span><span>${selectedSeats.length > 0 ? selectedSeats.join(', ') : 'None'}</span></div>
+                <div class="summary-item"><span>💰 Price per seat:</span><span>$${currentBus.price}</span></div>
+                <div class="summary-item total"><span>Total:</span><span>$${total}</span></div>
+            `;
+        }
+
+        function confirmBooking() {
+            if (!currentBus) {
+                alert('Please select a bus first');
+                return;
+            }
+            
+            const passengerCount = parseInt(document.getElementById('passengers').value);
+            
+            if (selectedSeats.length === 0) {
+                alert('Please select at least one seat');
+                return;
+            }
+            
+            if (selectedSeats.length !== passengerCount) {
+                alert(`You selected ${selectedSeats.length} seat(s) but passenger count is ${passengerCount}`);
+                return;
+            }
+            
+            const passengerName = prompt('Enter passenger name:', 'Guest Traveler');
+            if (!passengerName) return;
+            
+            const email = prompt('Enter email (optional):', 'guest@example.com') || 'guest@example.com';
+            const travelDate = document.getElementById('travelDate').value;
+            
+            
+            for (let seatNo of selectedSeats) {
+                const seat = currentBus.seats.find(s => s.seatNo === seatNo);
+                if (seat) seat.status = 'booked';
+            }
+            
+            const bookingId = 'BK' + Date.now() + Math.floor(Math.random() * 10000);
+            const totalPrice = selectedSeats.length * currentBus.price;
+            
+            const booking = {
+                bookingId: bookingId,
+                busId: currentBus.id,
+                busName: currentBus.name,
+                from: currentBus.from,
+                to: currentBus.to,
+                departure: currentBus.departure,
+                date: travelDate,
+                seats: [...selectedSeats],
+                passengerName: passengerName,
+                email: email,
+                totalPrice: totalPrice,
+                bookedAt: new Date().toLocaleString()
+            };
+            
+            bookings.push(booking);
+            saveData();
+            
+            alert(`✅ Booking confirmed!\nBooking ID: ${bookingId}\nTotal: $${totalPrice}\nSeats: ${selectedSeats.join(', ')}`);
+            
+            selectedSeats = [];
+            renderSeatMap();
+            updateSummary();
+            loadTickets();
+            searchBuses();
+        }
+
+        function loadTickets() {
+            const ticketsList = document.getElementById('ticketsList');
+            
+            if (bookings.length === 0) {
+                ticketsList.innerHTML = '<div class="loading">No bookings yet</div>';
+                return;
+            }
+            
+            ticketsList.innerHTML = [...bookings].reverse().map(booking => `
+                <div class="ticket-card">
+                    <div><strong>🎟️ ${booking.bookingId}</strong> | ${booking.busName}</div>
+                    <div>${booking.from} → ${booking.to} | ${booking.date} | ${booking.departure}</div>
+                    <div>👤 ${booking.passengerName} | Seats: ${booking.seats.join(', ')} | 💵 $${booking.totalPrice}</div>
+                    <small><i class="far fa-calendar-alt"></i> ${booking.bookedAt}</small>
+                </div>
+            `).join('');
+        }
+
+        function resetSelection() {
+            selectedSeats = [];
+            renderSeatMap();
+            updateSummary();
+        }
+
+        function exportData() {
+            const exportData = {
+                exportedAt: new Date().toISOString(),
+                buses: busDatabase.map(b => ({ id: b.id, name: b.name, seats: b.seats })),
+                bookings: bookings
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `gobus_export_${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert('Data exported successfully!');
+        }
+
+        function resetSystem() {
+            if (confirm('⚠️ WARNING: This will delete ALL bookings and reset all seats. Are you sure?')) {
+                for (let bus of busDatabase) {
+                    bus.seats = generateFreshSeats();
+                }
+                bookings = [];
+                saveData();
+                currentBus = null;
+                selectedSeats = [];
+                document.getElementById('seatMapArea').style.display = 'none';
+                document.getElementById('selectedBusInfo').innerHTML = '<i class="fas fa-info-circle"></i> Select a bus from the left panel';
+                document.getElementById('summary').innerHTML = '<div class="loading">No bus selected</div>';
+                searchBuses();
+                loadTickets();
+                alert('System reset successfully!');
+            }
+        }
+
+        
+        document.getElementById('searchBtn').addEventListener('click', searchBuses);
+        document.getElementById('confirmBtn').addEventListener('click', confirmBooking);
+        document.getElementById('resetBtn').addEventListener('click', resetSelection);
+        document.getElementById('exportBtn').addEventListener('click', exportData);
+        document.getElementById('resetSystemBtn').addEventListener('click', resetSystem);
+        document.getElementById('refreshTicketsBtn').addEventListener('click', loadTickets);
+        
+        
+        loadData();
+        searchBuses();
+        loadTickets();
+    </script>
+</body>
 </html>
