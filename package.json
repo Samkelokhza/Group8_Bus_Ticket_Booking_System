@@ -1,0 +1,19 @@
+{
+  "name": "bus-ticket-system",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently \"cd backend && python manage.py runserver\" \"cd frontend && npm run dev\"",
+    "install:all": "cd backend && pip install -r requirements.txt && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.100.10",
+    "axios": "^1.16.0",
+    "qrcode.react": "^4.2.0",
+    "react-hook-form": "^7.75.0",
+    "react-router-dom": "^7.15.0",
+    "recharts": "^3.8.1"
+  }
+}
