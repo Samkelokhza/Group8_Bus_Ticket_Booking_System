@@ -19,6 +19,7 @@ urlpatterns = [
     path('analytics/', AnalyticsView.as_view(), name='analytics'),
     path('reports/bookings/', BookingReportView.as_view(), name='booking-report'),
     path('schedules/<int:schedule_id>/seats/', SeatAvailabilityView.as_view(), name='seat-availability'),
+    path('schedules/<int:schedule_id>/passengers/', SchedulePassengersView.as_view(), name='schedule-passengers'),
     path('bookings/<int:booking_id>/cancel/', CancelBookingView.as_view(), name='cancel-booking'),
     path('', include(router.urls)),
 ]

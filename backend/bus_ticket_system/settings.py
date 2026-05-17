@@ -57,14 +57,13 @@ WSGI_APPLICATION = 'bus_ticket_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bus_ticket_db',
+        'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'Sam123@#%',
-        'HOST': 'localhost',
+        'PASSWORD': 'Sam123@#%Bus2026!',
+        'HOST': 'db.xxxxxx.supabase.co',  # ← YOUR Supabase host
         'PORT': '5432',
     }
 }
-
 AUTH_USER_MODEL = 'core.User'
 
 AUTH_PASSWORD_VALIDATORS = []
@@ -95,3 +94,5 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+
