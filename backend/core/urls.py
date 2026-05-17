@@ -10,7 +10,6 @@ router.register(r'schedules', ScheduleViewSet, basename='schedule')
 router.register(r'bookings', BookingViewSet, basename='booking')
 router.register(r'payments', PaymentViewSet, basename='payment')
 router.register(r'complaints', ComplaintViewSet, basename='complaint')
-router.register(r'nextofkin', NextOfKinViewSet, basename='nextofkin')
 
 urlpatterns = [
     path('auth/register/', RegisterView.as_view(), name='register'),
@@ -18,5 +17,8 @@ urlpatterns = [
     path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/me/', UserMeView.as_view(), name='user_me'),
     path('analytics/', AnalyticsView.as_view(), name='analytics'),
+    path('reports/bookings/', BookingReportView.as_view(), name='booking-report'),
+    path('schedules/<int:schedule_id>/seats/', SeatAvailabilityView.as_view(), name='seat-availability'),
+    path('bookings/<int:booking_id>/cancel/', CancelBookingView.as_view(), name='cancel-booking'),
     path('', include(router.urls)),
 ]

@@ -1,14 +1,12 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-import dj_database_url
-from pathlib import Path
-from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-bus-ticket-system-2026'
-DEBUG = True
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-bus-ticket-system-2026')
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -21,6 +19,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'django_filters',
     'core',
 ]
 
@@ -56,12 +55,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bus_ticket_system.wsgi.application'
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://postgres:Sam123@#%@localhost:5432/bus_ticket_db',
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'bus_ticket_db',
+        'USER': 'postgres',
+        'PASSWORD': 'Sam123@#%',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
+
 AUTH_USER_MODEL = 'core.User'
 
 AUTH_PASSWORD_VALIDATORS = []
@@ -92,14 +95,3 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-
-# Static files
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Security
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
