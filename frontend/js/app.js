@@ -1,4 +1,4 @@
-var API = 'http://127.0.0.1:8000/api';
+var API = 'https://group8-bus-ticket-booking-system.onrender.com/api';
 var TOKEN = localStorage.getItem('access_token');
 
 function authHeaders() {
