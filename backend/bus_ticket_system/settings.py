@@ -57,10 +57,10 @@ WSGI_APPLICATION = 'bus_ticket_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'NAME': 'bus_ticket_db',
         'USER': 'postgres',
-        'PASSWORD': 'Sam123@#%Bus2026!',
-        'HOST': 'db.xxxxxx.supabase.co',  # ← YOUR Supabase host
+        'PASSWORD': 'Sam123@#%',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }

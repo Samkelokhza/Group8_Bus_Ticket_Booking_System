@@ -36,25 +36,45 @@ class RegisterView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
         d = request.data
-        if not d.get('username') or not d.get('password') or not d.get('email'):
-            return Response({'error': 'Username, password, and email are required'}, status=400)
+        
+        # Check required fields
+        missing = []
+        if not d.get('username', '').strip(): missing.append('username')
+        if not d.get('password', '').strip(): missing.append('password')
+        if not d.get('email', '').strip(): missing.append('email')
+        if not d.get('first_name', '').strip(): missing.append('first_name')
+        if not d.get('last_name', '').strip(): missing.append('last_name')
+        
+        if missing:
+            return Response({'error': f'Missing required fields: {", ".join(missing)}'}, status=400)
+        
+        # Check password length
+        if len(d.get('password', '')) < 8:
+            return Response({'error': 'Password must be at least 8 characters'}, status=400)
+        
         try:
             user = User.objects.create_user(
-                username=d.get('username',''), email=d.get('email',''), password=d.get('password',''),
-                first_name=d.get('first_name',''), last_name=d.get('last_name',''))
+                username=d.get('username','').strip(),
+                email=d.get('email','').strip(),
+                password=d.get('password',''),
+                first_name=d.get('first_name','').strip(),
+                last_name=d.get('last_name','').strip()
+            )
             user.phone_number = d.get('phone_number', '')
             user.id_number = d.get('id_number', '')
-            user.address = d.get('address', '')
+            user.address = d.get('address', d.get('street_address', ''))
             user.account_status = 'active'
             user.save()
+            
             from core.models import Role, UserRole
             role_name = d.get('role', 'Passenger')
             role, _ = Role.objects.get_or_create(role_name=role_name)
             UserRole.objects.get_or_create(user=user, role=role)
-            return Response({'id': user.id, 'username': user.username}, status=201)
+            
+            return Response({'id': user.id, 'username': user.username, 'message': 'Success'}, status=201)
         except Exception as e:
             return Response({'error': str(e)}, status=400)
-
+        
 class UserMeView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
@@ -254,7 +274,7 @@ class PaymentViewSet(viewsets.ViewSet):
         return Response({'status': 'paid'}, status=201)
 
 # ============================================================
-# COMPLAINTS (FIX #1 - Filter by logged-in user)
+# COMPLAINTS ()
 # ============================================================
 class ComplaintViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
